@@ -80,6 +80,8 @@ Jobs not marked 'auto' are shown with the status "Check" in 'pstat' until the us
 
 **To install locally** (e.g. if you don't have admin permissions):  
 
+        make install
+        # ignore error message
         python setup.py install --user
 
 
