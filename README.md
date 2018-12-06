@@ -1,3 +1,5 @@
+This is a fork of the [Prisms-center PBS package repo](https://github.com/prisms-center/pbs) adjusted for usage in TAU Power PBS system.
+
 pbs
 ===
 
@@ -76,10 +78,9 @@ Jobs not marked 'auto' are shown with the status "Check" in 'pstat' until the us
     	
     - PYINSTALL: This specifies where to install the Python package ``pbs``. If not set, it uses the default distutils location.
 
+**To install locally** (e.g. if you don't have admin permissions):  
 
-** Note for flux users: ** 
-
-On flux, you can use my installation by including ```/scratch/prismsproject_flux/bpuchala/Public/pythonmodules``` in your PYTHONPATH, and ```/scratch/prismsproject_flux/bpuchala/Public/scripts``` in your PATH. It may be necessary to also run ```module load python/2.7.5```. This could be placed in your ```.bash_profile```.
+        python setup.py install --user
 
 
 
