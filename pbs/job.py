@@ -42,10 +42,12 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
 
     """
 
+    # default location for the queue config file
+    QUEUE_CONFIG = "../queue.conf"
 
     def __init__(self, name="STDIN", account=None, nodes=None, ppn=None, walltime=None, #pylint: disable=too-many-arguments, too-many-locals
                  pmem=None, qos=None, queue=None, exetime=None, message="a", email=None,
-                 priority="0", command=None, auto=False, substr=None, software=None):
+                 priority="0", command=None, auto=False, substr=None, software=None, queue_conf=QUEUE_CONFIG):
 
         if substr != None:
             self.read(substr)
@@ -135,7 +137,32 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         # jobID
         self.jobID = None   #pylint: disable=invalid-name
 
+        # Add parameters from queue conf if not already have value
+        if queue_conf:
+            self.read_queue_conf(queue_conf)
+
     #
+
+    def read_queue_conf(self, q_conf):
+        """
+        Reads a queue config file and updates job parameters accordingly
+        :param q_conf: path to queue config file
+        :return: -
+        """
+        conf_params = set(["queue", "account", "nodes", "ppn",
+                           "walltime", "pmem", "qos", "exetime",
+                           "email", "priority"])
+
+        with open(q_conf) as f:
+            for line in f:
+                if line.startswith("#"):
+                    continue
+                param, val = line.strip().split("=", max=1)
+                if param not in conf_params:
+                    print("Ignoring unrecognized queue config parameter %s" % param)
+                else:
+                    if not getattr(self, param):    # only set value if current value is None
+                        setattr(self, param, val)
 
     def sub_string(self):   #pylint: disable=too-many-branches
         """ Write Job as a string suitable for self.software """
