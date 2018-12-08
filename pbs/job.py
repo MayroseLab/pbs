@@ -118,7 +118,9 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         # Priority ranges from (low) -1024 to (high) 1023
         self.priority = priority
 
-        # text string with command to run
+        # text string or list of text strings with command/s to run
+        if type(command) is list:
+            command = "\n".join(command)
         self.command = command
 
         # if True, simply rerun job until complete; if False, human intervention required
