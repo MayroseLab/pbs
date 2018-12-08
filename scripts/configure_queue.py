@@ -30,6 +30,6 @@ conf_params["email"] = raw_input("What is your E-mail address? (for notification
 
 with open(conf_path,'w') as fo:
     for par in conf_params:
-        if conf_params[par]:
+        if conf_params[par] is not None:
             print("%s=%s" %(par, conf_params[par]), file=fo)
 print("Queue configuration created at %s" % conf_path)
