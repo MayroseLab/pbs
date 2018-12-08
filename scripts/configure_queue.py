@@ -21,11 +21,11 @@ conf_params = {
     "email": None,
     "priority": 0
 }
-conf_params["queue"] = raw_input("What is the default queue name?")
-conf_params["account"] = raw_input("What is the default account name?")
-conf_params["walltime"] = raw_input("What is the default job walltime?")
-conf_params["qos"] = raw_input("What is the default Quality of Service?")
-conf_params["email"] = raw_input("What is your E-mail address? (for notifications)")
+conf_params["queue"] = raw_input("What is the default queue name?\n")
+conf_params["account"] = raw_input("What is the default account name?\n")
+conf_params["walltime"] = raw_input("What is the default job walltime?\n")
+conf_params["qos"] = raw_input("What is the default Quality of Service?\n")
+conf_params["email"] = raw_input("What is your E-mail address? (for notifications)\n")
 
 with open(conf_path,'w') as fo:
     for par in conf_params:
