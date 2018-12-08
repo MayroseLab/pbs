@@ -1,10 +1,11 @@
 from __future__ import print_function
 import sys
+from os.path import expanduser
 
 if len(sys.argv) > 1:
     conf_path = sys.argv[1]
 else:
-    conf_path = "queue.conf"
+    conf_path = expanduser("~") + "/.queue.conf"
 print("Welcome to the queue configuration wizard."
       "Please insert the following default values."
       "If you don't want to set a default value for"

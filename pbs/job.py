@@ -43,7 +43,7 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
     """
 
     # default location for the queue config file
-    QUEUE_CONFIG = "../queue.conf"
+    QUEUE_CONFIG = os.path.expanduser("~") + "/.queue.conf" 
 
     def __init__(self, name="STDIN", account=None, nodes=None, ppn=None, walltime=None, #pylint: disable=too-many-arguments, too-many-locals
                  pmem=None, qos=None, queue=None, exetime=None, message="a", email=None,
@@ -76,10 +76,10 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         self.account = account
 
         # number of nodes to request
-        self.nodes = int(nodes)
+        self.nodes = nodes
 
         # number of processors per node to request
-        self.ppn = int(ppn)
+        self.ppn = ppn
 
         # string walltime for job (HH:MM:SS)
         self.walltime = walltime
@@ -140,6 +140,8 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         # Add parameters from queue conf if not already have value
         if queue_conf:
             self.read_queue_conf(queue_conf)
+        self.nodes = int(self.nodes)
+        self.ppn = int(self.ppn)
 
     #
 
@@ -157,7 +159,7 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
             for line in f:
                 if line.startswith("#"):
                     continue
-                param, val = line.strip().split("=", max=1)
+                param, val = line.strip().split("=",1)
                 if param not in conf_params:
                     print("Ignoring unrecognized queue config parameter %s" % param)
                 else:
