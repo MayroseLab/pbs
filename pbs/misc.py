@@ -52,7 +52,11 @@ def getversion(software=None):
         sout = StringIO.StringIO(stdout)
 
         # return the version number
-        return sout.read().rstrip("\n").lower().lstrip("version: ")
+        ver_out = sout.read()
+        if ver_out.startswith("version:"):	# Torque
+            return ver_out.rstrip("\n").lower().lstrip("version: ")
+        elif  ver_out.startswith("pbs_version = "):	# PBS-pro
+            return ver_out.rstrip("\n").lower().lstrip("pbs_version = ")
     elif software is "slurm":
         opt = ["squeue", "--version"]
 
