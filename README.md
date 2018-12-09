@@ -84,7 +84,19 @@ Jobs not marked 'auto' are shown with the status "Check" in 'pstat' until the us
         # ignore error message
         python setup.py install --user
 
+## Configuration
+In order to avoid providing all required parameters whenever a job is initialized, a user-specific configuration of the default parameters should be performed. Default values can always be changed (by re-configuring) or overwritten by specifying different values.
 
+After installing the software, use the configuration wizard script to generate your configuration. You can later change it manually or rerun the script.
+```
+python configure_queue.py
+```
+Then answer the interactive questions that appear on screen.
+By default, the configuration file will be created in your home directory (~/.queue.conf), but you can specify another location by running:
+```
+python configure_queue.py /path/to/conf_file
+```
+Note that if you do that, you'll have to specify this location whenever you initialize a job (the package'd default is to look for ~/.queue.conf).
 
 ## Documentation
 
