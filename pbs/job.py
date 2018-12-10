@@ -63,6 +63,8 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
 		misc_pbs = __import__("pbs.misc_torque", globals(), locals(), [], -1).misc_torque
 	elif self.software.strip() == "slurm":
 		misc_pbs = __import__("pbs.misc_slurm", globals(), locals(), [], -1).misc_slurm
+        elif self.software.strip() == "pro":
+                misc_pbs = __import__("pbs.misc_pro", globals(), locals(), [], -1).misc_pro
 	else:
 		misc_pbs = __import__("pbs.misc_torque", globals(), locals(), [], -1).misc_torque
 

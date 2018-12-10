@@ -213,7 +213,6 @@ class JobDB(object):    #pylint: disable=too-many-instance-attributes, too-many-
         self.connect(dbpath, configpath)
 
         global misc_pbs
-
         if self.config["software"] == "torque":
             # import misc_torque as misc_pbs      #pylint: disable=redefined-outer-name
             misc_pbs = __import__("pbs.misc_torque", globals(), locals(), [], -1).misc_torque
@@ -221,6 +220,8 @@ class JobDB(object):    #pylint: disable=too-many-instance-attributes, too-many-
             # import misc_slurm as misc
             # import misc_torque as misc_pbs      #pylint: disable=redefined-outer-name
             misc_pbs = __import__("pbs.misc_slurm", globals(), locals(), [], -1).misc_slurm
+        elif self.config["software"] == "pro":
+            misc_pbs = __import__("pbs.misc_pro", globals(), locals(), [], -1).misc_pro
         else:
             # import misc_torque as misc_pbs      #pylint: disable=redefined-outer-name
             misc_pbs = __import__("pbs.misc_torque", globals(), locals(), [], -1).misc_torque
@@ -247,7 +248,6 @@ class JobDB(object):    #pylint: disable=too-many-instance-attributes, too-many-
             the user's home directory
 
         """
-
         if dbpath is None:
             if "PBS_JOB_DB" in os.environ:
                 dbpath = os.environ("PBS_JOB_DB")
@@ -288,7 +288,6 @@ class JobDB(object):    #pylint: disable=too-many-instance-attributes, too-many-
                 print ("Error in pbs.jobdb.JobDB.connect(). argument configpath =",
                        configpath, "is not a file.")
                 sys.exit()
-
 
         if not os.path.isfile(configpath):
             print "Writing Config:", configpath
@@ -1087,6 +1086,8 @@ def complete_job(jobid=None, dbpath=None,):
         # import misc_slurm as misc
         # import misc_torque as misc_pbs      #pylint: disable=redefined-outer-name
         misc_pbs = __import__("pbs.misc_slurm", globals(), locals(), [], -1).misc_slurm
+    elif db.config["software"] == "pro":
+        misc_pbs = __import__("pbs.misc_pro", globals(), locals(), [], -1).misc_pro
     else:
         # import misc_torque as misc_pbs      #pylint: disable=redefined-outer-name
         misc_pbs = __import__("pbs.misc_torque", globals(), locals(), [], -1).misc_torque
