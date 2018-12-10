@@ -24,7 +24,17 @@ def getsoftware():
     is found, else returns "slurm" if sbatch is found, else returns
     "other" if neither is found. """
     if find_executable("qsub") is not None:
-        return "torque"
+        # Torque or PBS-Pro
+        opt = ["qstat", "--version"]
+        # call 'qstat' using subprocess
+        p = subprocess.Popen(opt, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) #pylint: disable=invalid-name
+        stdout, stderr = p.communicate()
+        if stdout.startswith('version:'):
+            return "torque"
+        elif stdout.startswith('pbs_version ='):
+            return "pro"
+        else:
+            return "other"
     elif find_executable("sbatch") is not None:
         return "slurm"
     else:
@@ -43,7 +53,7 @@ def getversion(software=None):
     """Returns the software version """
     if software is None:
         software = getsoftware()
-    if software is "torque":
+    if software is "torque" or software is "pro":
         opt = ["qstat", "--version"]
 
         # call 'qstat' using subprocess
@@ -53,9 +63,9 @@ def getversion(software=None):
 
         # return the version number
         ver_out = sout.read()
-        if ver_out.startswith("version:"):	# Torque
+        if software is "torque":
             return ver_out.rstrip("\n").lower().lstrip("version: ")
-        elif  ver_out.startswith("pbs_version = "):	# PBS-pro
+        elif software is "pro":
             return ver_out.rstrip("\n").lower().lstrip("pbs_version = ")
     elif software is "slurm":
         opt = ["squeue", "--version"]
