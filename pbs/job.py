@@ -5,6 +5,7 @@ import re
 import os
 import sys
 import StringIO
+from time import sleep
 
 ### Local ###
 import jobdb
@@ -269,6 +270,21 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
             db.add(status)
             db.close()
 
+    def submit_block(self, add=True, dbpath=None, configpath=None, checkinterval=30):
+        """
+        Submit job and wait until it completes or fails.
+        Returns True if job completed (status 'C') and False otherwise
+        """
+        self.submit(add=add, dbpath=dbpath, configpath=configpath)
+        sleep(checkinterval)
+        jobid = self.jobID
+        db = jobdb.JobDB(dbpath=dbpath, configpath=configpath)
+        db.connect()
+        job_status = db.select_job(jobid)["jobstatus"]
+        while job_status != "C":
+            sleep(checkinterval)
+            db.update()
+            job_status = db.select_job(jobid)["jobstatus"]
 
     def read(self, qsubstr):    #pylint: disable=too-many-branches, too-many-statements
         """Set this Job object from string representing a PBS submit script.
