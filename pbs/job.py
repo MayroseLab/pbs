@@ -181,7 +181,8 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
             jobstr += "#SBATCH -J {0}\n".format(self.name)
             if self.account is not None:
                 jobstr += "#SBATCH -A {0}\n".format(self.account)
-            jobstr += "#SBATCH -t {0}\n".format(self.walltime)
+            if self.walltime is not None:
+                jobstr += "#SBATCH -t {0}\n".format(self.walltime)
             jobstr += "#SBATCH -n {0}\n".format(self.nodes*self.ppn)
             if self.pmem is not None:
                 jobstr += "#SBATCH --mem-per-cpu={0}\n".format(self.pmem)
@@ -213,7 +214,8 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
                 jobstr += "#PBS -a {0}\n".format(self.exetime)
             if self.account is not None:
                 jobstr += "#PBS -A {0}\n".format(self.account)
-            jobstr += "#PBS -l walltime={0}\n".format(self.walltime)
+            if self.walltime is not None:
+                jobstr += "#PBS -l walltime={0}\n".format(self.walltime)
             jobstr += "#PBS -l nodes={0}:ppn={1}\n".format(self.nodes, self.ppn)
             if self.pmem is not None:
                 jobstr += "#PBS -l pmem={0}\n".format(self.pmem)
@@ -320,10 +322,10 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         optional["auto"] = "Default: False"
         optional["exetime"] = "Default: None"
         optional["qos"] = "Default: None"
+        optional["walltime"] = "Default: None"
 
         required = dict()
         required["name"] = "Not Found"
-        required["walltime"] = "Not Found"
         required["nodes"] = "Not Found"
         required["ppn"] = "Not Found"
         required["queue"] = "Not Found"

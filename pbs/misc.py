@@ -83,6 +83,8 @@ def getversion(software=None):
 
 def seconds(walltime):
     """Convert [[[DD:]HH:]MM:]SS to hours"""
+    if walltime is None:
+        return ''
     wtime = walltime.split(":")
     if len(wtime) == 1:
         return float(wtime[0])
@@ -101,6 +103,8 @@ def seconds(walltime):
 
 def hours(walltime):
     """Convert [[[DD:]HH:]MM:]SS to hours"""
+    if walltime is None:
+        return ''
     wtime = walltime.split(":")
     if len(wtime) == 1:
         return float(wtime[0])/3600.0
