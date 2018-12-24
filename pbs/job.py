@@ -246,17 +246,18 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         with open(filename, "w") as myfile:
             myfile.write(self.sub_string())
 
-    def submit(self, add=True, dbpath=None, configpath=None):
+    def submit(self, add=True, dbpath=None, configpath=None, silent=False):
         """Submit this Job using qsub
 
            add: Should this job be added to the JobDB database?
            dbpath: Specify a non-default JobDB database
+           silent: do not print qsub stdout
 
            Raises PBSError if error submitting the job.
 
         """
         try:
-            self.jobID = misc_pbs.submit(substr=self.sub_string())
+            self.jobID = misc_pbs.submit(substr=self.sub_string(), silent=silent)
         except misc.PBSError as e:  #pylint: disable=invalid-name
             raise e
 
@@ -275,7 +276,7 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
         Submit job and wait until it completes or fails.
         Returns True if job completed (status 'C') and False otherwise
         """
-        self.submit(add=add, dbpath=dbpath, configpath=configpath)
+        self.submit(add=add, dbpath=dbpath, configpath=configpath, silent=True)
         sleep(checkinterval)
         jobid = self.jobID
         db = jobdb.JobDB(dbpath=dbpath, configpath=configpath)
@@ -285,6 +286,7 @@ class Job(object):  #pylint: disable=too-many-instance-attributes
             sleep(checkinterval)
             db.update()
             job_status = db.select_job(jobid)["jobstatus"]
+
 
     def read(self, qsubstr):    #pylint: disable=too-many-branches, too-many-statements
         """Set this Job object from string representing a PBS submit script.
